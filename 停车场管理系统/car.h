@@ -4,17 +4,21 @@
 #include<sstream>
 #include<fstream>
 using namespace std;
-#define Max_Size 3
+#define Max_Size 5
+#define refresh true
+#define append false
 
 class car
 {
 public:
 	car() {};
 	car(const string carn, string atime, string dtime)
-		:carnumber(carn),arrivetime(atime), departtime(dtime)  //初始化成员，计算停车时间
+		:carnumber(carn),arrivetime(atime), departtime(dtime) 
 	{
 		calculateAmount();
 	}
+	car(const string carn, string atime)
+		:carnumber(carn), arrivetime(atime) {};
 
 	string getNumber() { return carnumber; }
 	string getAtime()	{ return arrivetime; }
@@ -60,17 +64,50 @@ typedef struct
 	int front, rear;
 }sideway;
 
+//管理员类
+class Manager
+{
+private:
+	parkinglot* p;
+	sideway* s;
 
-//停车场相关函数
-void initparkinglot(parkinglot*& p);
-void arrive(parkinglot* p, sideway* s, const char* carnumber, string atime, string dtime);
-void depart(parkinglot* p, int pos);
-void sqfindcar(parkinglot* p, string carname);
-void savecarinfo(parkinglot* p);
+public:
+	Manager()
+	{
+		initparkinglot();
+		initsideway();
+		loadfile();
+	}
 
-//便道相关函数
-void initsideway(sideway*& s);
-void ensideway(sideway* s, car* c);
-car* desideway(sideway* s);
+	//初始化
+	void initparkinglot()
+	{
+		p = new parkinglot;
+		p->length = 0;
 
-void draw();
+		for (int i = 0; i < Max_Size; i++)
+			p->parkinglot[i] = nullptr;
+	}
+	void initsideway()
+	{
+		s = new sideway;
+		s->front = s->rear = 0;
+	}
+
+	//停车场相关函数
+	void arrive();
+	void depart();
+	void sqfindcar(parkinglot* p, string carname);
+
+	//便道相关函数
+	void ensideway(sideway* s, car* c);
+	car* desideway(sideway* s);
+
+	//文件相关函数
+    void savecarinfo(bool mode);
+	void loadfile();
+
+	void parkinginfo();
+ };
+
+void drawmenu();

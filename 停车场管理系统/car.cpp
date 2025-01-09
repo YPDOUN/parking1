@@ -2,36 +2,30 @@
 
 int main()
 {
-	char input = 1;
-	do {
-		draw();
-		cout << "请输入序号：";
+	int input = 1;
+	Manager manager;
+
+	do
+	{
+		system("cls");
+		drawmenu();
+		cout << "请输入序号进入相应功能: ";
 		cin >> input;
 		switch (input)
 		{
-		case '1': break;
-		case '2': break;
-		case '3': break;
-		case '4': break;
-		default:cout << "输入错误，请重新输入！\n";
+		case 1:system("cls");
+			manager.parkinginfo();
+			system("pause");
+			break;
+		case 2:manager.arrive();
+			system("pause");
+			break;
+		case 3:manager.depart(); break;
+		default:cout << "输入错误，请重新输入！\n"; 
+			system("pause");
+			break;
 		}
-	} while (input!='0');
-
-	cin.get();
-	parkinglot *p;
-	sideway* s;
-	initparkinglot(p);
-	initsideway(s);
-
-    arrive(p, s, "粤A123456", "12:50", "16:30");
-	arrive(p, s, "粤A888888", "11:58", "16:30");
-	arrive(p, s, "粤A888888", "11:58", "16:30");
-	arrive(p, s, "粤A888888", "11:58", "16:30");
-
-	sqfindcar(p, "粤A123456");
-
-	depart(p, 1);
-    savecarinfo(p);
+	} while (input);
 
 	cin.get();
 }

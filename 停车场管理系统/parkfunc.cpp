@@ -1,32 +1,33 @@
 #include"car.h"
 
-//初始化停车场并将指针置null
-void initparkinglot(parkinglot*& p)
+void Manager::arrive()
 {
-	p = new parkinglot;
-	p->length = 0;
+	string carnumber, atime;
+	cout << "请输入汽车的车牌号和到达时间：";
+	cin >> carnumber >> atime;
 
-	for (int i = 0; i < Max_Size; i++)
-		p->parkinglot[i] = nullptr;
-}
-
-void arrive(parkinglot* p, sideway* s, const char* carnumber, string atime, string dtime)
-{
 	if (p->length >= Max_Size) {
-		car* tem = new car(carnumber, atime, dtime);
+		car* tem = new car(carnumber, atime);
 		ensideway(s, tem);
 		return;
 	}
 
-	p->parkinglot[p->length] = new car(carnumber, atime, dtime);
+	p->parkinglot[p->length] = new car(carnumber, atime);
 	p->length++;
 	cout << "车辆:" << carnumber << "已进入停车场！\n";
+
+	savecarinfo(append);
 }
 
-void depart(parkinglot* p, int pos)
+void Manager::depart()
 {
+	int pos;
+	parkinginfo();
+	cout << "请输入待离开车辆的车位号：";
+	cin >> pos;
+
 	if (pos < 1 || pos > p->length) {
-		cout << "无效的位置: " << pos << "无法移除车辆！";
+		cout << pos << "号车位上没有车辆！";
 		return;
 	}
 	
@@ -41,7 +42,7 @@ void depart(parkinglot* p, int pos)
 	p->parkinglot[p->length] = nullptr;
 }
 
-void sqfindcar(parkinglot* p, string carname)
+void Manager::sqfindcar(parkinglot* p, string carname)
 {
 	for (int i = 0; i < p->length; i++) {
 		if (carname == p->parkinglot[i]->getNumber())
@@ -49,14 +50,15 @@ void sqfindcar(parkinglot* p, string carname)
 	}
 }
 
-void savecarinfo(parkinglot* p) {
-	ofstream file("parkinglot.csv");
+void Manager::savecarinfo(bool mode) {
+	ofstream file("parkinglot.csv", mode ? (ios::out | ios::trunc) : (ios::out));
 
 	if (file.is_open()) {
 		file << "车牌号,到达时间,离开时间,待支付金额\n";
 		for (int i = 0; i < p->length; i++) {
 			if (p->parkinglot[i] == nullptr)
 				i++;
+
 			file << p->parkinglot[i]->getNumber() << "," << p->parkinglot[i]->getAtime()
 				<< "," << p->parkinglot[i]->getDtime() << "," << p->parkinglot[i]->getAmount()<<"\n";
 		}
@@ -67,7 +69,34 @@ void savecarinfo(parkinglot* p) {
 	}
 }
 
-void loadfile()
+void Manager::loadfile()
 {
+	ifstream file("parkinglot.csv");
+	string line;
+	int n = 0;
 
+
+	if (file.is_open()) {
+		getline(file, line);
+
+		while (getline(file, line))
+		{
+			stringstream ss(line);
+			string carnumber, atime, dtime, amount;
+
+			getline(ss, carnumber, ',');
+			getline(ss, atime, ',');
+			getline(ss, dtime, ',');
+			getline(ss, amount, ',');
+
+			car* tem = new car(carnumber, atime, dtime);
+			p->parkinglot[n] = tem;
+			p->length++;
+			n++;
+		}
+		file.close();
+	}
+	else {
+		cerr << "无法打开文件！" << endl;
+	}
 }
