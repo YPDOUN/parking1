@@ -43,7 +43,7 @@ public:
 		arrive_min_sum = arrivehour * 60 + arrivemin;
 	}
 
-	//获取离开时间并转化为分钟数
+	//获取离开时间并转化为分钟数并求总价钱
 	void Getdeparttime()
 	{
 		time_t dime;
@@ -54,12 +54,8 @@ public:
 		int departhour = q.tm_hour;
 		int departmin = q.tm_min;
 		depart_min_sum = departhour * 60 + departmin;
-	}
 
-	//计算总金额
-	void sumAmout()
-	{
-		parkingtime = (depart_min_sum - arrive_min_sum) / 60.0;
+		parkingtime = (depart_min_sum - arrive_min_sum) / 60;
 		amount = parkingtime * rate_per_hour;
 	}
 
@@ -72,10 +68,7 @@ public:
 	//设置计费单价
 	static void setRate(double rate)
 	{
-		if (rate > 0)
-			rate_per_hour = rate;
-		else
-			cout << "单价必须为正数！" << endl;
+		rate_per_hour = rate;
 	}
 
 	int gethour() { return arrive_min_sum / 60; }

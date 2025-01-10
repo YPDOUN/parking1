@@ -1,20 +1,2 @@
-﻿  car.cpp
-D:\c文件\停车场管理系统\停车场管理系统\car.h(62,51): warning C4244: “=”: 从“double”转换到“int”，可能丢失数据
-  (编译源文件“car.cpp”)
-  
-  func.cpp
-D:\c文件\停车场管理系统\停车场管理系统\car.h(62,51): warning C4244: “=”: 从“double”转换到“int”，可能丢失数据
-  (编译源文件“func.cpp”)
-  
-  parkfunc.cpp
-D:\c文件\停车场管理系统\停车场管理系统\car.h(62,51): warning C4244: “=”: 从“double”转换到“int”，可能丢失数据
-  (编译源文件“parkfunc.cpp”)
-  
-D:\c文件\停车场管理系统\停车场管理系统\parkfunc.cpp(212,7): warning C4101: “i”: 未引用的局部变量
-  sidewayfunc.cpp
-D:\c文件\停车场管理系统\停车场管理系统\car.h(62,51): warning C4244: “=”: 从“double”转换到“int”，可能丢失数据
-  (编译源文件“sidewayfunc.cpp”)
-  
-  正在生成代码...
-D:\c文件\停车场管理系统\停车场管理系统\parkfunc.cpp(129,1): warning C4715: “Manager::findcar”: 不是所有的控件路径都返回值
+﻿  func.cpp
   停车场管理系统.vcxproj -> D:\c文件\停车场管理系统\x64\Debug\停车场管理系统.exe

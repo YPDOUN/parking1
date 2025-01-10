@@ -171,34 +171,6 @@ void Manager::bubblesort()
 
 void Manager::loadfile()
 {
-	/*ifstream file("parkinglot.csv");
-	string line;
-	int n = 0;
-
-	if (file.is_open()) {
-		getline(file, line);
-
-		while (getline(file, line))
-		{
-			stringstream ss(line);
-			string carnumber, atime, dtime, amount;
-
-			getline(ss, carnumber, ',');
-			getline(ss, atime, ',');
-			getline(ss, dtime, ',');
-			getline(ss, amount, ',');
-
-			car* tem = new car(carnumber, atime, dtime);
-			p->parkinglot[n] = tem;
-			p->length++;
-			n++;
-		}
-		file.close();
-	}
-	else {
-		cerr << "无法打开文件！" << endl;
-	}*/
-
 	ifstream file("parkinglot.csv");
 	string line;
 	getline(file, line);

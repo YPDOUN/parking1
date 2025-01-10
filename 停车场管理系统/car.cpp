@@ -1,7 +1,7 @@
 #include"car.h"
 
 
-double car::rate_per_hour = 10.0;
+double car::rate_per_hour = 5.0;
 
 int main()
 {
@@ -38,8 +38,10 @@ int main()
 		case 7:cout << "当前计费单价为：" << car::getRate() << ",请输入新的计费单价：";
 			double rate;
 			cin >> rate;
-			car::setRate(rate);
-			cout << "修改成功！" << endl;
+			if (rate > 0)
+				car::setRate(rate);
+			else
+				cout << "计费单价应该大于0！" << endl;
 			system("pause");
 			break;
 		case 0:cout << "退出系统\n"; break;

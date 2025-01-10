@@ -16,7 +16,7 @@ void Manager::drawmenu()
 	cout << "**          0.退出停车场系统          **\n";
 	cout << "**                                    **\n";
 	cout << "**   本停车场计费单价为: "
-		<< fixed << setprecision(2) << car::getRate() << "元/h    **\n";
+		<< setw(5) << setfill(' ') << fixed << setprecision(2) << car::getRate() << "元/h    **\n";
 	cout << "****************************************\n";
 }
 
