@@ -1,2 +1,16 @@
-﻿  parkfunc.cpp
-  停车场管理系统.vcxproj -> D:\c文件\停车场管理系统\x64\Debug\停车场管理系统.exe
+﻿  car.cpp
+  func.cpp
+  parkfunc.cpp
+  sidewayfunc.cpp
+  正在生成代码...
+D:\c文件\停车场管理系统\停车场管理系统\sidewayfunc.cpp(58,15): error C2143: 语法错误: 缺少“;”(在“Manager::isstackempty”的前面)
+D:\c文件\停车场管理系统\停车场管理系统\sidewayfunc.cpp(58,1): error C4430: 缺少类型说明符 - 假定为 int。注意: C++ 不支持默认 int
+D:\c文件\停车场管理系统\停车场管理系统\sidewayfunc.cpp(58,15): error C4430: 缺少类型说明符 - 假定为 int。注意: C++ 不支持默认 int
+D:\c文件\停车场管理系统\停车场管理系统\sidewayfunc.cpp(58,15): error C2556: “int Manager::isstackempty(void)”: 重载函数与“bool Manager::isstackempty(void)”只是在返回类型上不同
+      D:\c文件\停车场管理系统\停车场管理系统\car.h(131,7):
+      参见“Manager::isstackempty”的声明
+  
+D:\c文件\停车场管理系统\停车场管理系统\sidewayfunc.cpp(58,15): error C2371: “Manager::isstackempty”: 重定义；不同的基类型
+      D:\c文件\停车场管理系统\停车场管理系统\car.h(131,7):
+      参见“Manager::isstackempty”的声明
+  

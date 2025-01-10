@@ -20,7 +20,13 @@ int main()
 		case 2:manager.arrive();
 			system("pause");
 			break;
-		case 3:manager.depart(); break;
+		case 3:manager.depart();
+			system("pause");
+			break;
+		case 4:manager.showsidewayinfo();
+			system("pause");
+			break;
+		case 0:cout << "退出系统\n"; break;
 		default:cout << "输入错误，请重新输入！\n"; 
 			system("pause");
 			break;

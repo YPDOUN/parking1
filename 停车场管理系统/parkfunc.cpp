@@ -8,7 +8,7 @@ void Manager::arrive()
 
 	if (p->length >= Max_Size) {
 		car* tem = new car(carnumber, atime);
-		ensideway(s, tem);
+		ensideway(tem);
 		return;
 	}
 
@@ -26,20 +26,31 @@ void Manager::depart()
 	cout << "请输入待离开车辆的车位号：";
 	cin >> pos;
 
-	if (pos < 1 || pos > p->length) {
+	if (pos < 1 || pos > p->length) 
+	{
 		cout << pos << "号车位上没有车辆！";
 		return;
 	}
 	
 	car* q = p->parkinglot[pos - 1];
 	cout << q->getNumber() << "已离开停车场\n";
+	delete q;
+
 	for (int i = pos - 1; i < p->length - 1; i++) {
 		p->parkinglot[i] = p->parkinglot[i + 1];
 	}
-
-	delete q;
+	p->parkinglot[p->length - 1] = nullptr;
 	p->length--;
-	p->parkinglot[p->length] = nullptr;
+	
+	if (!issidewayempty())
+	{
+		car* temcar = desideway();
+		p->parkinglot[p->length] = temcar;
+		p->length++;
+
+		cout << "停车场有空位，便道中的" << temcar->getNumber()
+			<< "已进入停车场中" << endl;
+	}
 }
 
 void Manager::sqfindcar(parkinglot* p, string carname)

@@ -18,7 +18,9 @@ public:
 		calculateAmount();
 	}
 	car(const string carn, string atime)
-		:carnumber(carn), arrivetime(atime) {};
+		:carnumber(carn), arrivetime(atime) {
+		amount = 0.0;
+	};
 
 	string getNumber() { return carnumber; }
 	string getAtime()	{ return arrivetime; }
@@ -64,12 +66,20 @@ typedef struct
 	int front, rear;
 }sideway;
 
+typedef struct
+{
+	car* stack[Max_Size];
+	int top;
+}temstack;
+
 //管理员类
 class Manager
 {
 private:
+	
 	parkinglot* p;
 	sideway* s;
+	temstack* t;
 
 public:
 	Manager()
@@ -79,7 +89,7 @@ public:
 		loadfile();
 	}
 
-	//初始化
+	//初始化顺序表停车场
 	void initparkinglot()
 	{
 		p = new parkinglot;
@@ -88,26 +98,44 @@ public:
 		for (int i = 0; i < Max_Size; i++)
 			p->parkinglot[i] = nullptr;
 	}
+
+	//初始化队列便道
 	void initsideway()
 	{
 		s = new sideway;
+		for (int i = 0; i < Max_Size; i++)
+			s->sideway[i] = nullptr;
 		s->front = s->rear = 0;
+	}
+
+	//初始化栈用于存放便道车辆
+	void initstack()
+	{
+		t = new temstack;
+		for (int i = 0; i < Max_Size; i++)
+			t->stack[i] = nullptr;
+		t->top = -1;
 	}
 
 	//停车场相关函数
 	void arrive();
 	void depart();
 	void sqfindcar(parkinglot* p, string carname);
+	void parkinginfo();
 
 	//便道相关函数
-	void ensideway(sideway* s, car* c);
-	car* desideway(sideway* s);
+	bool issidewayempty();
+	void ensideway(car* c);
+	car* desideway();
+	void showsidewayinfo();
+	bool isstackempty();
+	void push(car* c);
+	bool pop(car*& c);
+	void departsideway();
 
 	//文件相关函数
     void savecarinfo(bool mode);
 	void loadfile();
-
-	void parkinginfo();
  };
 
 void drawmenu();
