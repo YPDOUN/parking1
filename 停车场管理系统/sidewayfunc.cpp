@@ -17,7 +17,6 @@ void Manager::ensideway(car* c)
 	{
 		s->rear = (s->rear + 1) % Max_Size;
 		s->sideway[s->rear] = c;
-		cout << "停车场车位已满，" << c->getNumber() << "无法进入停车场，已停放在便道！\n";
 	}
 }
 
@@ -55,52 +54,4 @@ void Manager::showsidewayinfo()
 			n++;
 		}
 	}
-}
-
-bool Manager::isstackempty()
-{
-	return t->top == -1;
-}
-
-void Manager::push(car* c)
-{
-	//栈满
-	if (t->top == Max_Size - 1)
-	{
-		cout << "栈满！";
-		return;
-	}
-	else
-	{
-		t->top++;
-		t->stack[t->top] = c;
-	}
-}
-
-bool Manager::pop(car*& c)
-{
-	if (t->top == -1)
-		return false;
-	else
-	{
-		c = t->stack[t->top];
-		t->top--;
-		return true;
-	}
-
-}
-
-void Manager::departsideway()
-{
-	/*
-	* menu
-	* 输入汽车车牌号 车位号删除车辆
-	* front出放入栈
-	*/
-
-	car* tem = depar
-	
-
-
-	
 }
