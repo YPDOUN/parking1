@@ -1,5 +1,13 @@
 #include"car.h"
 
+void Manager::initsideway()
+{
+	s = new sideway;
+	for (int i = 0; i < Max_Size; i++)
+		s->sideway[i] = nullptr;
+	s->front = s->rear = 0;
+}
+
 bool Manager::issidewayempty()
 {
 	return (s->front == s->rear);
@@ -8,7 +16,7 @@ bool Manager::issidewayempty()
 //入队列
 void Manager::ensideway(car* c)
 {
-	if ((s->rear + 1) % Max_Size == s->front) 
+	if ((s->rear + 1) % Max_Size == s->front)
 	{
 		cout << "便道车辆等待车辆已满！\n";
 		return;

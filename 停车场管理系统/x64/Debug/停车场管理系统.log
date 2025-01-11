@@ -1,2 +1,3 @@
-﻿  func.cpp
+﻿  parkfunc.cpp
+D:\c文件\停车场管理系统\停车场管理系统\parkfunc.cpp(113,1): warning C4715: “Manager::sqfindcar”: 不是所有的控件路径都返回值
   停车场管理系统.vcxproj -> D:\c文件\停车场管理系统\x64\Debug\停车场管理系统.exe

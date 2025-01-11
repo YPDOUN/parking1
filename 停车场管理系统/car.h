@@ -13,10 +13,16 @@ using namespace std;
 class car
 {
 public:
-	car(const string carn, int arrivehour, int arrivemin)
-		:carnumber(carn), arrive_min_sum(arrivehour * 60 + arrivemin),depart_min_sum(0),amount(0) {};
+	car(const string carn, int arrivehour, int arrivemin, int space)
+		:carnumber(carn), arrive_min_sum(arrivehour * 60 + arrivemin), 
+		depart_min_sum(0), amount(0),spacenum(space) 
+	{
+	};
 
 	car(string carnumber1) :carnumber(carnumber1)
+	{}
+
+	car(string carnumber1, int space) :carnumber(carnumber1), spacenum(space)
 	{
 		parktime();
 	}
@@ -29,7 +35,12 @@ public:
 	double getDtimesum() { return depart_min_sum; }
 	//返回金额
 	double getAmount() { return amount; }
+	//返回车位号
+	int getSpace() { return spacenum; }
 
+	void setcarnum(string num) { carnumber = num; }
+
+	void setcarspace(int space) { spacenum = space; }
 	//计算到达时间，并转换为分钟数
 	void parktime()
 	{
@@ -73,12 +84,13 @@ public:
 
 	int gethour() { return arrive_min_sum / 60; }
 	int getmin() { return arrive_min_sum % 60; }
-
+	void setspace(int space) { spacenum = space; }
 private:
+	int spacenum;
 	string carnumber; //车牌号	
 	int parkingtime; //停车时间
 	double amount; //总金额
-	int arrive_min_sum;
+	int arrive_min_sum;//总分钟数
 	int depart_min_sum;
 	static double rate_per_hour;
 };
@@ -103,40 +115,36 @@ class Manager
 private:
 	parkinglot* p;
 	sideway* s;
+	int emptyspace[Max_Size + 1];
+
 public:
 	Manager()
 	{
 		initparkinglot();
 		initsideway();
+		initspace();
 		loadfile();
 	}
 
 	//初始化顺序表停车场
-	void initparkinglot()
-	{
-		p = new parkinglot;
-		p->length = 0;
-
-		for (int i = 0; i < Max_Size; i++)
-			p->parkinglot[i] = nullptr;
-	}
+	void initparkinglot();
 
 	//初始化队列便道
-	void initsideway()
-	{
-		s = new sideway;
-		for (int i = 0; i < Max_Size; i++)
-			s->sideway[i] = nullptr;
-		s->front = s->rear = 0;
-	}
+	void initsideway();
 
 	//停车场相关函数
 	void arrive();
 	void depart();
-	void sqfindcar();
-	void parkinginfo();
-	car* findcar();
-	void bubblesort();
+
+	//查找函数(顺序查找和二分查找)
+	car* sqfindcar(string carnum);
+	car* binarysearch(int space);
+	void findcar();
+
+	//排序函数
+	void sort();
+	void sort1();
+	void sift(int low, int high);
 
 	//便道相关函数
 	bool issidewayempty();
@@ -145,8 +153,13 @@ public:
 	void showsidewayinfo();
 
 	//文件相关函数
-    void savecarinfo(bool mode);
+	void savecarinfo(bool mode);
 	void loadfile();
 
+	//其他函数
 	static void drawmenu();
- };
+	void printonecar(car* tem);
+	void parkinginfo();
+	void initspace();
+	void modifyinfo();
+};

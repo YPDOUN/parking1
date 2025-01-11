@@ -10,7 +10,6 @@ int main()
 
 	do
 	{
-		system("cls");
 		Manager::drawmenu();
 		cout << "请输入序号进入相应功能: ";
 		cin >> input;
@@ -32,10 +31,13 @@ int main()
 		case 5:manager.findcar();
 			system("pause");
 			break;
-		case 6:manager.bubblesort();
+		case 6:manager.sort1();
 			system("pause");
 			break;
-		case 7:cout << "当前计费单价为：" << car::getRate() << ",请输入新的计费单价：";
+		case 7:manager.modifyinfo();
+			system("pause");
+			break;
+		case 8:cout << "当前计费单价为：" << car::getRate() << ",请输入新的计费单价：";
 			double rate;
 			cin >> rate;
 			if (rate > 0)
@@ -45,11 +47,11 @@ int main()
 			system("pause");
 			break;
 		case 0:cout << "退出系统\n"; break;
-		default:cout << "输入错误，请重新输入！\n"; 
+		default:cout << "输入错误，请重新输入！\n";
 			system("pause");
 			break;
 		}
 	} while (input);
 
-	cin.get();
+	return 0;
 }

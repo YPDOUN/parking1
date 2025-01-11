@@ -1,10 +1,33 @@
 #include"car.h"
 
+void Manager::initparkinglot()
+{
+	p = new parkinglot;
+	p->length = 0;
+
+	for (int i = 0; i < Max_Size; i++)
+		p->parkinglot[i] = nullptr;
+}
+
+
+void Manager::initspace()
+{
+	for (int i = 1; i < Max_Size + 1; i++)
+		emptyspace[i] = i;
+}
+
 void Manager::arrive()
 {
 	string carnumber;
-	cout << "请输入汽车的车牌号：";
-	cin >> carnumber;
+	int space;
+	cout << "请输入汽车的车牌号和车位号：";
+	cin >> carnumber >> space;
+
+	if (emptyspace[space] == -1)
+	{
+		cout << "该车位号上已经有车！" << endl;
+		return;
+	}
 
 	if (p->length >= Max_Size) {
 		car* tem = new car(carnumber);
@@ -15,9 +38,10 @@ void Manager::arrive()
 	}
 	else
 	{
-		p->parkinglot[p->length] = new car(carnumber);
+		p->parkinglot[p->length] = new car(carnumber, space);
+		emptyspace[space] = -1;
 		p->length++;
-		cout << "车辆:" << carnumber << "已进入停车场！\n";
+		cout << "车辆:" << carnumber << "已进入停车场的" << space << "号车位！\n";
 	}
 
 	savecarinfo(append);
@@ -25,33 +49,47 @@ void Manager::arrive()
 
 void Manager::depart()
 {
-	int pos;
+	system("cls");
+	int space;
 
 	parkinginfo();
 	cout << "请输入待离开车辆的车位号：";
-	cin >> pos;
+	cin >> space;
 
-	if (pos < 1 || pos > p->length) 
+	if (space < 1 || space > p->length)
 	{
-		cout << pos << "号车位上没有车辆！";
+		cout << space << "号车位上没有车辆！";
 		return;
 	}
-	
-	car* q = p->parkinglot[pos - 1];
-	q->Getdeparttime();
-	cout << q->getNumber() << "已离开停车场, 费用为：" << q->getAmount() << endl;
-	delete q;
 
-	for (int i = pos - 1; i < p->length - 1; i++) 
+	for(int i = 0; i < p->length; i++)
 	{
-		p->parkinglot[i] = p->parkinglot[i + 1];
+		if (p->parkinglot[i]->getSpace() == space)
+		{
+			car* q = p->parkinglot[space - 1];
+			q->Getdeparttime();
+			cout << q->getNumber() << "已离开停车场, 费用为：" << q->getAmount() << endl;
+			delete q;
+
+			for (int j = i; j < p->length - 1; j++)
+			{
+				p->parkinglot[j] = p->parkinglot[j + 1];
+			}
+			p->parkinglot[p->length - 1] = nullptr;
+			p->length--;
+		}
+		else if(i >= p->length)
+		{
+			cout << space << "号车位上没有车辆！" << endl;
+			return;
+		}
 	}
-	p->parkinglot[p->length - 1] = nullptr;
-	p->length--;
-	
+
 	if (!issidewayempty())
 	{
 		car* temcar = desideway();
+		temcar->parktime();
+		temcar->setspace(space);
 		p->parkinglot[p->length] = temcar;
 		p->length++;
 
@@ -60,134 +98,217 @@ void Manager::depart()
 	}
 }
 
-void Manager::sqfindcar()
+car* Manager::sqfindcar(string carnum)
 {
-	/*int choose, pos;
-	string carname;
-	cout << "请选择功能 1).车牌号 2).车位号:";
+	for (int i = 0; i < p->length; i++)
+	{
+		if (carnum == p->parkinglot[i]->getNumber())
+		{
+			car* tem = p->parkinglot[i];
+			return tem;
+		}
+		if (i >= p->length)
+			return nullptr;
+	}
+}
+
+car* Manager::binarysearch(int space)
+{
+	sort();
+	int low = 0, high = p->length - 1, mid;
+
+	while (low <= high)
+	{
+		mid = low + (high - low) / 2;
+		if (p->parkinglot[mid]->getSpace() == space)
+			return p->parkinglot[mid];
+		else if (p->parkinglot[mid]->getSpace() > space)
+			high = mid - 1;
+		else
+			low = mid + 1;
+	}
+	return nullptr;
+}
+
+void Manager::findcar()
+{
+	system("cls");
+	cout << "***************************\n";
+	cout << "**     查询单辆汽车信息  **\n";
+	cout << "**     1.车牌号查询      **\n";
+	cout << "**     2.车位号查询      **\n";
+	cout << "**     0.退出查询        **\n";
+	cout << "***************************\n";
+
+	int choose, space;
+	string carnum;
+
+	cout << "请输入功能序号: ";
 	cin >> choose;
+
 	if (choose == 1)
 	{
-		cout << "请输入车牌号:";
-		cin >> carname;
-		
-		for (int i = 0; i < p->length; i++)
+		cout << "请输入车牌号：";
+		cin >> carnum;
+
+		car* tem = sqfindcar(carnum);
+		if (tem != nullptr)
+			printonecar(tem);
+		else
 		{
-			if (carname == p->parkinglot[i]->getNumber())
-			{
-				cout << carname << "的位置位于" << i + 1 << "号\n";
-				cout << "车位号" << "	" << "车牌号" << "		" << "到达时间" << "	" << "离开时间" << endl;
-				cout << i + 1 << "	" << p->parkinglot[i]->getNumber() << "	"
-					<< p->parkinglot[i]->getAtime() << "	" << p->parkinglot[i]->getDtime() << "	"
-					<< p->parkinglot[i]->getAmount() << endl;
-			}
+			cout << "查无此车辆！" << endl;
 		}
 	}
-	else
+	else if (choose == 2)
 	{
 		cout << "请输入车位号：";
-		cin >> pos;
+		cin >> space;
 
-		if(p->parkinglot[pos - 1] == nullptr)
+		car* tem = binarysearch(space);
+		if (tem != nullptr)
+			printonecar(tem);
+		else
 		{
-			cout << "该车位上不存在车辆！";
+			cout << "查无此车辆！" << endl;
+		}
+	}
+	else if (choose == 0)
+	{
+		cout << "退出查询!" << endl;
+		return;
+	}
+	else
+		cout << "输入错误！" << endl;
+}
+
+void Manager::sort()
+{
+	for (int i = 1; i < p->length; i++)
+	{
+		car *x = p->parkinglot[i];//待插入元素
+		
+		int low = 0, high = i - 1;
+		while (low <= high)
+		{
+			int mid = (low + high) / 2;
+			if (x->getAtimesum() < p->parkinglot[mid]->getAtimesum())//待插入元素在mid左边
+				high = mid - 1;
+			else
+				low = mid + 1;
+		}
+
+		for (int j = i - 1; j >= 0 && x->getAtimesum() < p->parkinglot[j]->getAtimesum(); j--)
+		{
+			p->parkinglot[j + 1] = p->parkinglot[j];
+		}
+
+		p->parkinglot[low] = x;
+	}
+}
+
+
+void Manager::sift(int low, int high)
+{
+	int i = low, j = 2 * i + 1;
+	
+	car* tem = p->parkinglot[i];
+
+	while (j <= high)
+	{
+		if (j < high && p->parkinglot[j]->getAtimesum() < p->parkinglot[j + 1]->getAtimesum())
+			j++;
+
+		if (tem->getAtimesum() < p->parkinglot[j]->getAtimesum())
+		{
+			p->parkinglot[i] = p->parkinglot[j];
+			i = j;
+			j = 2 * i + 1;
+		}
+		else
+			break;
+	}
+	p->parkinglot[i] = tem;
+}
+
+void Manager::sort1()
+{
+	int i;
+	int n = p->length;
+
+	for (i = n / 2; i >= 0; i--)
+		sift(i, n - 1);
+	for (i = p->length - 1; i > 0; i--)
+	{
+		car* tem = p->parkinglot[0];
+		p->parkinglot[0] = p->parkinglot[i];
+		p->parkinglot[i] = tem;
+
+		sift(0, i - 1);
+	}
+}
+
+void Manager::modifyinfo()
+{
+	system("cls");
+	cout << "***************************\n";
+	cout << "**     查询单辆汽车信息  **\n";
+	cout << "**     1.车牌号查询修改  **\n";
+	cout << "**     2.车位号查询修改  **\n";
+	cout << "**     0.退出修改        **\n";
+	cout << "***************************\n";
+
+	int choose, space;
+	string carnum;
+
+	cout << "请输入功能序号：";
+	cin >> choose;
+
+	if (choose == 1)
+	{
+		cout << "请输入车牌号：";
+		cin >> carnum;
+		car* tem = sqfindcar(carnum);
+
+		if (tem != nullptr)
+		{
+			printonecar(tem);
+			cout << "请输入新的车牌号：" << endl;
+			cin >> carnum;
+			tem->setcarnum(carnum);
+			cout << "修改成功！" << endl;
+		}
+		else
+		{
+			cout << "查无车辆！" << endl;
 			return;
 		}
+	}
+
+	else if (choose == 2)
+	{
+		cout << "请输入车位号：";
+		cin >> space;
+		car* tem = binarysearch(space);
+
+		if (tem != nullptr)
+		{
+			printonecar(tem);
+			cout << "请输入新的车位号：" << endl;
+			cin >> space;
+			tem->setcarspace(space);
+			cout << "修改成功！" << endl;
+		}
 		else
 		{
-			cout << carname << "的位置位于" << pos << "号\n";
-			cout << "车位号" << "	" << "车牌号" << "		" << "到达时间" << "	" << "离开时间" << endl;
-			cout << pos << "	" << p->parkinglot[pos - 1]->getNumber() << "	"
-				<< p->parkinglot[pos - 1]->getAtime() << "	" << p->parkinglot[pos - 1]->getDtime() << "	"
-				<< p->parkinglot[pos - 1]->getAmount() << endl;
+			cout << "查无车辆！" << endl;
+			return;
 		}
-	}*/
-}
-
-car* Manager::findcar()
-{
-	int left = 0, right = p->length - 1, mid;
-	string carname;
-	cout << "请输入待查找车辆的车牌号：";
-	cin >> carname;
-
-	while (left <= right)
+	}
+	else if (choose == 0)
 	{
-		mid = (left + right) / 2;
-		car* midcar= p->parkinglot[mid];
-		if (midcar->getNumber() == carname)
-		{
-			return midcar;
-		}
-		else if (midcar->getNumber() > carname)
-			left = mid + 1;
-		else
-			right = mid - 1;
+		cout << "退出修改!" << endl;
+		return;
 	}
-
-}
-
-void Manager::savecarinfo(bool mode) {
-	ofstream file("parkinglot.csv", mode ? (ios::out | ios::trunc) : (ios::out));
-
-	if (file.is_open()) {
-		file << "车牌号,到达时间\n";
-		for (int i = 0; i < p->length; i++) {
-			if (p->parkinglot[i] == nullptr)
-				i++;
-			
-			int hour = p->parkinglot[i]->gethour();
-			int min = p->parkinglot[i]->getmin();
-
-			file << p->parkinglot[i]->getNumber() << ","
-				<< setw(2) << setfill('0') << hour << ":"
-				<< setw(2) << setfill('0') << min << "\n";
-		}
-		file.close();
-	}
-	else {
-		cerr << "无法打开文件!" << endl;
-	}
-}
-
-void Manager::bubblesort()
-{
-	for (int i = 0; i < p->length - 1; i++)
-	{
-		for (int j = 0; j < p->length - 1; j++)
-		{
-			double atimesum1 = p->parkinglot[j]->getAtimesum();
-			double atimesum2 = p->parkinglot[j + 1]->getAtimesum();
-
-			if (atimesum1 > atimesum2)
-			{
-				car* tem = p->parkinglot[j];
-				p->parkinglot[j] = p->parkinglot[j + 1];
-				p->parkinglot[j + 1] = tem;
-			}
-		}
-	}
-}
-
-void Manager::loadfile()
-{
-	ifstream file("parkinglot.csv");
-	string line;
-	getline(file, line);
-	while (getline(file, line))
-	{
-		stringstream ss(line);
-		string carnumber;
-		int arrivehour, arriveminute;
-		char delimiter;
-		int i;
-
-		if (getline(ss, carnumber, ',') && ss >> arrivehour >> delimiter >> arriveminute)
-		{
-			car* tem = new car(carnumber, arrivehour, arriveminute);
-			p->parkinglot[p->length] = tem;
-			p->length++;
-		}
-	}
-	file.close();
+	else
+		cout << "输入错误！" << endl;
 }
