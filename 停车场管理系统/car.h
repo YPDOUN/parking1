@@ -6,7 +6,7 @@
 #include<time.h>
 #include<iomanip>
 using namespace std;
-#define Max_Size 5
+#define Max_Size 50
 #define refresh true
 #define append false
 
@@ -86,7 +86,7 @@ public:
 	int getmin() { return arrive_min_sum % 60; }
 	void setspace(int space) { spacenum = space; }
 private:
-	int spacenum;
+	int spacenum;//车位号
 	string carnumber; //车牌号	
 	int parkingtime; //停车时间
 	double amount; //总金额
@@ -142,9 +142,10 @@ public:
 	void findcar();
 
 	//排序函数
-	void sort();
-	void sort1();
+	void bininsertsort();
+	void heapsort();
 	void sift(int low, int high);
+	void sort();
 
 	//便道相关函数
 	bool issidewayempty();

@@ -31,7 +31,7 @@ int main()
 		case 5:manager.findcar();
 			system("pause");
 			break;
-		case 6:manager.sort1();
+		case 6:manager.sort();
 			system("pause");
 			break;
 		case 7:manager.modifyinfo();

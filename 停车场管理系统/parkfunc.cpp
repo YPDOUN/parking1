@@ -66,7 +66,7 @@ void Manager::depart()
 	{
 		if (p->parkinglot[i]->getSpace() == space)
 		{
-			car* q = p->parkinglot[space - 1];
+			car* q = p->parkinglot[i];
 			q->Getdeparttime();
 			cout << q->getNumber() << "已离开停车场, 费用为：" << q->getAmount() << endl;
 			delete q;
@@ -181,29 +181,9 @@ void Manager::findcar()
 		cout << "输入错误！" << endl;
 }
 
-void Manager::sort()
+void Manager::bininsertsort()
 {
-	for (int i = 1; i < p->length; i++)
-	{
-		car *x = p->parkinglot[i];//待插入元素
-		
-		int low = 0, high = i - 1;
-		while (low <= high)
-		{
-			int mid = (low + high) / 2;
-			if (x->getAtimesum() < p->parkinglot[mid]->getAtimesum())//待插入元素在mid左边
-				high = mid - 1;
-			else
-				low = mid + 1;
-		}
-
-		for (int j = i - 1; j >= 0 && x->getAtimesum() < p->parkinglot[j]->getAtimesum(); j--)
-		{
-			p->parkinglot[j + 1] = p->parkinglot[j];
-		}
-
-		p->parkinglot[low] = x;
-	}
+	
 }
 
 
@@ -212,7 +192,7 @@ void Manager::sift(int low, int high)
 	int i = low, j = 2 * i + 1;
 	
 	car* tem = p->parkinglot[i];
-
+	
 	while (j <= high)
 	{
 		if (j < high && p->parkinglot[j]->getAtimesum() < p->parkinglot[j + 1]->getAtimesum())
@@ -230,7 +210,7 @@ void Manager::sift(int low, int high)
 	p->parkinglot[i] = tem;
 }
 
-void Manager::sort1()
+void Manager::heapsort()
 {
 	int i;
 	int n = p->length;
@@ -311,4 +291,44 @@ void Manager::modifyinfo()
 	}
 	else
 		cout << "输入错误！" << endl;
+}
+
+void Manager::sort()
+{
+	system("cls");
+	cout << "***************************\n";
+	cout << "**     排序车辆信息      **\n";
+	cout << "**     1.车位号排序      **\n";
+	cout << "**     2.入场时间排序    **\n";
+	cout << "**     3.车牌号排序      **\n";
+	cout << "**     0.退出修改        **\n";
+	cout << "***************************\n";
+
+	int choose;
+	cout << "请输入相应的功能序号：";
+	cin >> choose;
+
+	switch (choose)
+	{
+	case 1:
+		bininsertsort();
+		cout << "排序后的车场信息如下: " << endl;
+		parkinginfo();
+		break;
+	case 2:
+		heapsort();
+		cout << "排序后的车场信息如下: " << endl;
+		parkinginfo();
+		break;
+	case 3:
+		cout << "排序后的车场信息如下: " << endl;
+		parkinginfo();
+		break;
+	case 0:
+		cout << "退出排序！" << endl;
+		break;
+	default:
+		cout << "输入错误！" << endl;
+		break;
+	}
 }
